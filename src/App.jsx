@@ -23,11 +23,10 @@ function App() {
   }, [cartItems]);
 
   // Use the useNavigate hook to obtain the navigate function
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  function addToCart(product, e) {
+  function addToCart(product) {
     // Prevent the default button click behavior (navigation)
-    e.preventDefault();
 
     // Check if the product is already in the cart
     const existingItem = cartItems.find((item) => item.id === product.id);
@@ -66,6 +65,7 @@ function App() {
           path="/products"
           element={<AllProducts addToCart={addToCart} />}
         />
+
         <Route path="/products/:id" element={<SingleProduct />} />
         <Route
           path="/login"
@@ -78,10 +78,7 @@ function App() {
             />
           }
         />
-        <Route
-          path="/cart"
-          element={<Cart cartItems={cartItems} user={user} setUser={setUser} />}
-        />
+        <Route path="/cart" element={<Cart cartItems={cartItems} />} />
         <Route path="/logout" element={<Logout setToken={setToken} />} />
       </Routes>
     </div>

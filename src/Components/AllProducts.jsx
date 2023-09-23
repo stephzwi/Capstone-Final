@@ -129,41 +129,20 @@
 //     </>
 //   );
 // }
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import PropTypes from "prop-types";
 
-export default function AllProducts({ addToCart }) {
+function AllProducts({ addToCart }) {
   const baseUrl = "https://fakestoreapi.com/";
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Add state for user rating
   const [userRatings, setUserRatings] = useState({});
-  const [cartItems, setCartItems] = useState([]);
-
-  // Function to add a product to the cart
-  function addToCart(product) {
-    // Check if the product is already in the cart
-    const existingItem = cartItems.find((item) => item.id === product.id);
-
-    if (existingItem) {
-      // If the product is already in the cart, update the quantity
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      // If the product is not in the cart, add it with a quantity of 1
-      setCartItems((prevItems) => [...prevItems, { ...product, quantity: 1 }]);
-    }
-  }
 
   useEffect(() => {
     async function fetchProducts() {
@@ -187,6 +166,10 @@ export default function AllProducts({ addToCart }) {
     }
     fetchProducts();
   }, []);
+
+  AllProducts.propTypes = {
+    addToCart: PropTypes.func.isRequired, // Ensure addToCart is a required function prop
+  };
 
   // Function to handle user rating changes
   function handleRatingChange(productId, newRating) {
@@ -236,9 +219,12 @@ export default function AllProducts({ addToCart }) {
     return stars;
   }
 
-  function handleBuyClick(product) {
+  function handleAddToCart(product) {
+    // Add the product to the cart here
     addToCart(product);
-    // navigate("/cart"); // Navigate to the cart page
+
+    // Navigate to the cart page
+    navigate("/cart");
   }
 
   return (
@@ -249,10 +235,7 @@ export default function AllProducts({ addToCart }) {
         ) : (
           <div>
             {products.map((product) => (
-              <div
-                // onClick={() => navigate(`/products/${product.id}`)}
-                key={product.id}
-              >
+              <div key={product.id}>
                 <div>
                   <ul>
                     <h4> {capitalizeFirstLetter(product.category)}</h4>
@@ -262,10 +245,7 @@ export default function AllProducts({ addToCart }) {
                       className="Product-Image"
                       src={product.image}
                       alt={product.title}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // navigate(`/products/${product.id}`);
-                      }}
+                      onClick={() => navigate(`/products/${product.id}`)}
                     />
                     {/* Render stars based on user rating */}
                     <div className="star-rating">
@@ -273,8 +253,9 @@ export default function AllProducts({ addToCart }) {
                     </div>
                     <h6>{product.rating.count} Ratings</h6>{" "}
                     <h5>Price: {product.price}</h5>
-                    <button onClick={() => handleBuyClick(product, e)}>
-                      Buy
+                    <div></div>
+                    <button onClick={() => addToCart(product)}>
+                      Add to Cart
                     </button>
                   </ul>
                 </div>
@@ -286,3 +267,4 @@ export default function AllProducts({ addToCart }) {
     </>
   );
 }
+export default AllProducts;
