@@ -85,12 +85,13 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-function Account({ token, setToken }) {
+function Account({ token, setToken, user, setUser }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     // Check if the user is already authenticated (e.g., using the token)
     if (token) {

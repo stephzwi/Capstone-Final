@@ -1,27 +1,53 @@
 import React, { useEffect, useState } from "react";
 
-function Cart() {
-  const [carts, setCarts] = useState([]);
-  const [cartItems, setCartItems] = useState([]); // Local cart state
+function Cart(props) {
+  console.log(props);
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/carts")
-      .then((res) => res.json())
-      .then((data) => setCarts(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://fakestoreapi.com/carts")
+  //     .then((res) => res.json())
+  //     .then((data) => setCarts(data));
+  // }, []);
 
   const addToCart = (product) => {
-    // Add the product to the local cart state
+    // Update the local cart state
     setCartItems((prevCartItems) => [...prevCartItems, product]);
 
+    //   Send a POST request to update the server-side cart
+    fetch(`https://fakestoreapi.com/carts/${user.userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: product.productId,
+        quantity: product.quantity + 1, // Update the quantity as needed
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to update cart on the server");
+        }
+        // Handle success if needed
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle the error if needed
+      });
+
     // Update the quantity in the user's cart
-    updateCartItem(product.productId, user.userId, product.quantity);
+    updateCartItem(
+      product.image,
+      product.productId,
+      props.user.userId,
+      product.quantity
+    );
   };
 
   return (
     <div>
       <h1>Cart</h1>
-      {carts.map((cart) => (
+      {/* {carts.map((cart) => (
         <div key={cart.id}>
           <h2>User ID: {cart.userId}</h2>
           <p>Date: {cart.date}</p>
@@ -34,12 +60,12 @@ function Cart() {
             ))}
           </ul>
         </div>
-      ))}
+      ))} */}
 
       {/* Display the local cart */}
       <h2>Your Cart</h2>
       <ul>
-        {cartItems.map((item, index) => (
+        {props.cartItems.map((item, index) => (
           <li key={index}>
             Product ID: {item.productId}, Quantity: {item.quantity}
           </li>

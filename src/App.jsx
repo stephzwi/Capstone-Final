@@ -63,7 +63,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/products"
-          element={<AllProducts addToCart={addToCart} />}
+          element={<AllProducts addToCart={addToCart} user={user} />}
         />
 
         <Route path="/products/:id" element={<SingleProduct />} />
@@ -78,7 +78,16 @@ function App() {
             />
           }
         />
-        <Route path="/cart" element={<Cart cartItems={cartItems} />} />
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              cartItems={cartItems}
+              user={user}
+              setCartItems={setCartItems}
+            />
+          }
+        />
         <Route path="/logout" element={<Logout setToken={setToken} />} />
       </Routes>
     </div>
