@@ -8,7 +8,8 @@ function Cart(props) {
       <ul>
         {props.cartItems.map((item, index) => (
           <li key={index}>
-            Product ID: {item.id}, Quantity: {item.quantity}, Item Name:
+            <img src={item.image}></img> ,Product ID: {item.id}, Quantity:{" "}
+            {item.quantity}, Item Name:
             {item.title}, Item Price: {item.price * item.quantity}
           </li>
         ))}
